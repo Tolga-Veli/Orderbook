@@ -1,0 +1,20 @@
+[
+{
+  "directory": "D:/projects/Orderbook/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/projects/Orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\GUI.cpp.obj -c D:\\projects\\Orderbook\\src\\GUI.cpp",
+  "file": "D:/projects/Orderbook/src/GUI.cpp",
+  "output": "D:/projects/Orderbook/build/CMakeFiles/OrderBookApp.dir/src/GUI.cpp.obj"
+},
+{
+  "directory": "D:/projects/Orderbook/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/projects/Orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\main.cpp.obj -c D:\\projects\\Orderbook\\src\\main.cpp",
+  "file": "D:/projects/Orderbook/src/main.cpp",
+  "output": "D:/projects/Orderbook/build/CMakeFiles/OrderBookApp.dir/src/main.cpp.obj"
+},
+{
+  "directory": "D:/projects/Orderbook/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/projects/Orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\orderbook.cpp.obj -c D:\\projects\\Orderbook\\src\\orderbook.cpp",
+  "file": "D:/projects/Orderbook/src/orderbook.cpp",
+  "output": "D:/projects/Orderbook/build/CMakeFiles/OrderBookApp.dir/src/orderbook.cpp.obj"
+}
+]
