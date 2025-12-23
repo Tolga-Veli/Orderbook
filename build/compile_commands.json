@@ -7,14 +7,26 @@
 },
 {
   "directory": "D:/projects/Orderbook/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/projects/Orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\Matcher.cpp.obj -c D:\\projects\\Orderbook\\src\\Matcher.cpp",
+  "file": "D:/projects/Orderbook/src/Matcher.cpp",
+  "output": "D:/projects/Orderbook/build/CMakeFiles/OrderBookApp.dir/src/Matcher.cpp.obj"
+},
+{
+  "directory": "D:/projects/Orderbook/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/projects/Orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\Orderbook.cpp.obj -c D:\\projects\\Orderbook\\src\\Orderbook.cpp",
+  "file": "D:/projects/Orderbook/src/Orderbook.cpp",
+  "output": "D:/projects/Orderbook/build/CMakeFiles/OrderBookApp.dir/src/Orderbook.cpp.obj"
+},
+{
+  "directory": "D:/projects/Orderbook/build",
   "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/projects/Orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\main.cpp.obj -c D:\\projects\\Orderbook\\src\\main.cpp",
   "file": "D:/projects/Orderbook/src/main.cpp",
   "output": "D:/projects/Orderbook/build/CMakeFiles/OrderBookApp.dir/src/main.cpp.obj"
 },
 {
   "directory": "D:/projects/Orderbook/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/projects/Orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\orderbook.cpp.obj -c D:\\projects\\Orderbook\\src\\orderbook.cpp",
-  "file": "D:/projects/Orderbook/src/orderbook.cpp",
-  "output": "D:/projects/Orderbook/build/CMakeFiles/OrderBookApp.dir/src/orderbook.cpp.obj"
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/projects/Orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\test.cpp.obj -c D:\\projects\\Orderbook\\src\\test.cpp",
+  "file": "D:/projects/Orderbook/src/test.cpp",
+  "output": "D:/projects/Orderbook/build/CMakeFiles/OrderBookApp.dir/src/test.cpp.obj"
 }
 ]
