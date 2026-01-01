@@ -1,59 +1,68 @@
 #pragma once
 
 #include <map>
+#include <unordered_map>
 #include <optional>
 
-#include "LinkedList.tpp"
+#include "List.tpp"
 #include "Order.hpp"
 #include "Trade.hpp"
+#include "MatchingEngine.hpp"
 
 namespace ob {
 namespace engine {
-using core::ClientID;
-using core::Flags;
-using core::Order;
-using core::OrderID;
-using core::OrderType;
-using core::Price;
-using core::Quantity;
-using core::Side;
-using core::Time;
-using core::TimeInForce;
-using core::Trade;
 
 class Orderbook {
 public:
   void AddOrder(ClientID clientID, Price price, Quantity quantity, Side side,
                 OrderType _order_type, TimeInForce tif, Flags flag);
 
-  std::optional<Order> GetOrder(OrderID orderID);
-  void ModifyOrder(const OrderID &orderID, Price new_price,
-                   Quantity new_quantity);
-  void KillOrder(const OrderID &id);
+  void ModifyOrder(OrderID orderID, Price new_price, Quantity new_quantity);
+  void CancelOrder(OrderID id);
   void CancelAllOrders();
-  void MatchOrders();
+  void RemoveFillAndKill();
 
-  Order GetBestBid();
-  Order GetBestAsk();
-  std::vector<Order> GetOrderByPrice(Price price);
-  std::vector<Trade> GetTradeHistory();
-  Quantity GetVolumeAtPrice(Price price);
-  Price GetSpread();
+  void SetMatchingStrategy(std::unique_ptr<IMatchingEngine> engine) {
+    matchingEngine_ = std::move(engine);
+  }
+
+  [[nodiscard]] bool HasOrders() const;
+  [[nodiscard]] std::optional<std::reference_wrapper<Order>>
+  GetOrder(OrderID orderID) const;
+
+  Order *GetBestBid() const;
+  Order *GetBestAsk() const;
+  Quantity GetVolumeAtPrice(Price price) const;
+  std::vector<Order> GetOrderByPrice(Price price) const;
+  Price GetSpread() const;
   void GetDepth();
 
   void PrintOrderbook();
-  void Shutdown();
+  const std::vector<Trade> &GetTradeHistory() const { return trades_; };
 
-  Orderbook() {}
+  Orderbook() : matchingEngine_(std::make_unique<FIFO_Matching>()) {}
+  Orderbook(const Orderbook &) = delete;
+  Orderbook(Orderbook &&) = delete;
+  void operator=(const Orderbook &) = delete;
+  void operator=(Orderbook &&) = delete;
   ~Orderbook() { Shutdown(); }
 
 private:
-  std::map<Price, data::LinkedList<Order>, std::greater<Price>> bids_;
-  std::map<Price, data::LinkedList<Order>, std::less<Price>> asks_;
-  std::map<OrderID, data::LinkedList<Order>::node *> orders_;
-  Time _closingTime;
+  struct OrderPointer {
+    data::List<Order>::iterator iter;
+    data::List<Order> *list_ptr;
+  };
 
-  void AddOrderInternal(Order order);
+  std::map<Price, data::List<Order>, std::greater<Price>> bids_;
+  std::map<Price, data::List<Order>, std::less<Price>> asks_;
+  std::unordered_map<OrderID, OrderPointer> orders_;
+  std::vector<Trade> trades_;
+
+  std::unique_ptr<IMatchingEngine> matchingEngine_;
+
+  void MatchIncomingOrders(Order &order);
+  void AddOrderInternal(Order &&order);
+  void Shutdown();
 };
 } // namespace engine
 } // namespace ob

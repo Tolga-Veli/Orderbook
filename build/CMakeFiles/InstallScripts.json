@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"D:/projects/Orderbook/build/cmake_install.cmake"
+		"C:/Users/Tolga/Documents/dev/projects/orderbook/build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

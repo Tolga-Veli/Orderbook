@@ -2,12 +2,11 @@
 	"configurations" : 
 	[
 		{
-			"abstractTargets" : [],
 			"directories" : 
 			[
 				{
 					"build" : ".",
-					"jsonFile" : "directory-.-Debug-f6f22219c74102c3da70.json",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.20"
@@ -40,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "OrderBookApp::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-OrderBookApp-Debug-0d66148372ddc9fa8c39.json",
+					"jsonFile" : "target-OrderBookApp-Debug-0946db891f550a1b73f6.json",
 					"name" : "OrderBookApp",
 					"projectIndex" : 0
 				}
@@ -50,12 +49,12 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "D:/projects/Orderbook/build",
-		"source" : "D:/projects/Orderbook"
+		"build" : "C:/Users/Tolga/Documents/dev/projects/orderbook/build",
+		"source" : "C:/Users/Tolga/Documents/dev/projects/orderbook"
 	},
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 9
+		"minor" : 8
 	}
 }

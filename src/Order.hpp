@@ -1,18 +1,18 @@
 #pragma once
 
 #include "globals.hpp"
+#include <iostream>
 
 namespace ob {
-namespace core {
+namespace engine {
 class Order {
 public:
   Order() = delete;
   Order(OrderID orderID, ClientID clientID, Price price, Quantity quantity,
         Side side, OrderType order_type, TimeInForce tif, Flags flag)
-      : orderID_(orderID), clientID_(clientID),
-        timestamp_(util::GetCurrentTime()), price_(price),
-        initialQuantity_(quantity), remainingQuantity_(quantity), side_(side),
-        orderType_(order_type), tif_(tif), flag_(flag) {}
+      : orderID_(orderID), clientID_(clientID), timestamp_(GetCurrentTime()),
+        price_(price), initialQuantity_(quantity), remainingQuantity_(quantity),
+        side_(side), orderType_(order_type), tif_(tif), flags_(flag) {}
   ~Order() = default;
 
   const OrderID &GetOrderID() const { return orderID_; }
@@ -27,7 +27,7 @@ public:
   Side GetSide() const { return side_; }
   OrderType GetOrderType() const { return orderType_; }
   TimeInForce GetTimeInForce() const { return tif_; }
-  Flags GetFlag() const { return flag_; }
+  Flags GetFlags() const { return flags_; }
   bool isFilled() const { return remainingQuantity_ == 0; }
 
   void ModifyOrder(Price newprice_, Quantity new_quantity) {
@@ -38,7 +38,7 @@ public:
 
     price_ = newprice_;
     remainingQuantity_ = new_quantity - filled;
-    timestamp_ = util::GetCurrentTime();
+    timestamp_ = GetCurrentTime();
   }
 
   void Fill(Quantity quantity) {
@@ -49,7 +49,7 @@ public:
     remainingQuantity_ -= quantity;
   }
 
-  void print() const {
+  void info() const {
     std::cout << "OrderID: " << orderID_ << " , ClientID: " << clientID_
               << " , Price: " << price_
               << " , Initial Quantity: " << initialQuantity_
@@ -57,7 +57,7 @@ public:
               << " , Time: " << timestamp_ << " , Side: " << to_string(side_)
               << " , Order Type: " << to_string(orderType_)
               << " , Time in Force: " << to_string(tif_)
-              << " , Flag: " << to_string(flag_) << '\n';
+              << " , Flags: " << to_string(flags_) << '\n';
   }
 
 private:
@@ -69,7 +69,7 @@ private:
   Side side_;
   OrderType orderType_;
   TimeInForce tif_;
-  Flags flag_;
+  Flags flags_;
 };
-} // namespace core
+} // namespace engine
 } // namespace ob

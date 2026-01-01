@@ -1,32 +1,20 @@
 [
 {
-  "directory": "D:/projects/Orderbook/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/projects/Orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\GUI.cpp.obj -c D:\\projects\\Orderbook\\src\\GUI.cpp",
-  "file": "D:/projects/Orderbook/src/GUI.cpp",
-  "output": "D:/projects/Orderbook/build/CMakeFiles/OrderBookApp.dir/src/GUI.cpp.obj"
+  "directory": "C:/Users/Tolga/Documents/dev/projects/orderbook/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -IC:/Users/Tolga/Documents/dev/projects/orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\MatchingEngine.cpp.obj -c C:\\Users\\Tolga\\Documents\\dev\\projects\\orderbook\\src\\MatchingEngine.cpp",
+  "file": "C:\\Users\\Tolga\\Documents\\dev\\projects\\orderbook\\src\\MatchingEngine.cpp",
+  "output": "CMakeFiles\\OrderBookApp.dir\\src\\MatchingEngine.cpp.obj"
 },
 {
-  "directory": "D:/projects/Orderbook/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/projects/Orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\Matcher.cpp.obj -c D:\\projects\\Orderbook\\src\\Matcher.cpp",
-  "file": "D:/projects/Orderbook/src/Matcher.cpp",
-  "output": "D:/projects/Orderbook/build/CMakeFiles/OrderBookApp.dir/src/Matcher.cpp.obj"
+  "directory": "C:/Users/Tolga/Documents/dev/projects/orderbook/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -IC:/Users/Tolga/Documents/dev/projects/orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\Orderbook.cpp.obj -c C:\\Users\\Tolga\\Documents\\dev\\projects\\orderbook\\src\\Orderbook.cpp",
+  "file": "C:\\Users\\Tolga\\Documents\\dev\\projects\\orderbook\\src\\Orderbook.cpp",
+  "output": "CMakeFiles\\OrderBookApp.dir\\src\\Orderbook.cpp.obj"
 },
 {
-  "directory": "D:/projects/Orderbook/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/projects/Orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\Orderbook.cpp.obj -c D:\\projects\\Orderbook\\src\\Orderbook.cpp",
-  "file": "D:/projects/Orderbook/src/Orderbook.cpp",
-  "output": "D:/projects/Orderbook/build/CMakeFiles/OrderBookApp.dir/src/Orderbook.cpp.obj"
-},
-{
-  "directory": "D:/projects/Orderbook/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/projects/Orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\main.cpp.obj -c D:\\projects\\Orderbook\\src\\main.cpp",
-  "file": "D:/projects/Orderbook/src/main.cpp",
-  "output": "D:/projects/Orderbook/build/CMakeFiles/OrderBookApp.dir/src/main.cpp.obj"
-},
-{
-  "directory": "D:/projects/Orderbook/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/projects/Orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\test.cpp.obj -c D:\\projects\\Orderbook\\src\\test.cpp",
-  "file": "D:/projects/Orderbook/src/test.cpp",
-  "output": "D:/projects/Orderbook/build/CMakeFiles/OrderBookApp.dir/src/test.cpp.obj"
+  "directory": "C:/Users/Tolga/Documents/dev/projects/orderbook/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -IC:/Users/Tolga/Documents/dev/projects/orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\main.cpp.obj -c C:\\Users\\Tolga\\Documents\\dev\\projects\\orderbook\\src\\main.cpp",
+  "file": "C:\\Users\\Tolga\\Documents\\dev\\projects\\orderbook\\src\\main.cpp",
+  "output": "CMakeFiles\\OrderBookApp.dir\\src\\main.cpp.obj"
 }
 ]

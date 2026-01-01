@@ -2,11 +2,10 @@
 
 #include <cstdint>
 #include <chrono>
-#include <iostream>
 #include <string_view>
 
 namespace ob {
-namespace core {
+namespace engine {
 using OrderID = uint64_t;
 using ClientID = uint64_t;
 using TradeID = uint64_t;
@@ -14,16 +13,18 @@ using Price = int64_t; // in cents therefore  $1 = 100
 using Quantity = uint64_t;
 using Time = std::chrono::nanoseconds;
 
-enum class Side { Buy, Sell };
+enum class Side { Buy = 0, Sell };
 
-enum class OrderType { Limit, Market, Stop, StopLimit };
+enum class OrderType { Limit = 0, Market, Stop, StopLimit };
 
 enum class TimeInForce {
-  GoodForDay,
+  DayOrder = 0,
   GoodTillCancelled,
   ImmediateOrCancel,
-  FillOrKill
+  FillOrKill,
+  FillAndKill
 };
+
 enum class Flags : uint8_t {
   None = 0,
   Hidden = 1,
@@ -43,11 +44,6 @@ inline Flags &operator|=(Flags &a, Flags b) {
   a = a | b;
   return a;
 }
-
-enum class LiquidityFlag {
-  Maker,
-  Taker,
-};
 
 enum class MatchType {
   Standard,
@@ -80,8 +76,8 @@ inline constexpr std::string_view to_string(OrderType order_type) {
 
 inline constexpr std::string_view to_string(TimeInForce tif) {
   switch (tif) {
-  case TimeInForce::GoodForDay:
-    return "GoodForDay";
+  case TimeInForce::DayOrder:
+    return "DayOrder";
   case TimeInForce::GoodTillCancelled:
     return "GoodTillCancelled";
   case TimeInForce::ImmediateOrCancel:
@@ -111,13 +107,6 @@ inline std::string to_string(Flags flag) {
   return str;
 }
 
-inline constexpr std::string_view to_string(LiquidityFlag liquidityFlag) {
-  if (liquidityFlag == LiquidityFlag::Maker)
-    return "Maker";
-  else
-    return "Taker";
-}
-
 inline constexpr std::string_view to_string(MatchType matchType) {
   switch (matchType) {
   case MatchType::Standard:
@@ -132,13 +121,10 @@ inline constexpr std::string_view to_string(MatchType matchType) {
     throw std::logic_error("Match Type doesn't exist.");
   }
 }
-}; // namespace core
 
-namespace util {
-static core::Time GetCurrentTime() {
-  return std::chrono::duration_cast<core::Time>(
+static Time GetCurrentTime() {
+  return std::chrono::duration_cast<Time>(
       std::chrono::steady_clock::now().time_since_epoch());
 }
-
-} // namespace util
+}; // namespace engine
 } // namespace ob

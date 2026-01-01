@@ -1,37 +1,44 @@
+#pragma once
+
 #include "globals.hpp"
 
+#include <iostream>
+
 namespace ob {
-namespace core {
+namespace engine {
 class Trade {
 public:
   Trade() = delete;
-  Trade(TradeID tradeID, OrderID makerOrderID, OrderID takerOrderID,
-        Price price, Quantity quantity, Side takerSide,
-        LiquidityFlag liquidityFlag, MatchType matchType)
-      : tradeID_(tradeID), makerOrderID_(makerOrderID),
-        timestamp_(util::GetCurrentTime()), takerOrderID_(takerOrderID),
-        price_(price), quantity_(quantity), takerSide_(takerSide),
-        liquidityFlag_(liquidityFlag), matchType_(matchType) {}
+  Trade(TradeID tradeID, OrderID bidOrderID, OrderID askOrderID, Price bidPrice,
+        Price askPrice, Quantity quantity, MatchType matchType)
+      : tradeID_(tradeID), bidOrderID_(bidOrderID), askOrderID_(askOrderID),
+        bidPrice_(bidPrice), askPrice_(askPrice), quantity_(quantity),
+        matchType_(matchType), timestamp_(GetCurrentTime()) {}
 
   const TradeID GetTradeID() const { return tradeID_; }
-  const OrderID GetMakerOrderID() const { return makerOrderID_; }
-  const OrderID GetTakerOrderID() const { return takerOrderID_; }
+  const OrderID GetBidOrderID() const { return bidOrderID_; }
+  const OrderID GetAskOrderID() const { return askOrderID_; }
   Time GetTimestamp() const { return timestamp_; }
-  Price GetPrice() const { return price_; }
+  Price GetAskPrice() const { return askPrice_; }
+  Price GetBidPrice() const { return bidPrice_; }
   Quantity GetQuantity() const { return quantity_; }
-  Side GetSide() const { return takerSide_; }
-  LiquidityFlag GetLiquidityFlag() const { return liquidityFlag_; }
   MatchType GetMatchType() const { return matchType_; }
+
+  void info() const {
+    std::cout << "TradeID: " << tradeID_ << ", bidOrderID: " << bidOrderID_
+              << ", askOrderID: " << askOrderID_
+              << ", Timestamp: " << timestamp_ << ", bidPrice: " << bidPrice_
+              << ",askPrice:  " << askPrice_ << ", Quantity: " << quantity_
+              << ", Match Type: " << to_string(matchType_) << '\n';
+  }
 
 private:
   const TradeID tradeID_;
-  const OrderID makerOrderID_, takerOrderID_;
+  const OrderID bidOrderID_, askOrderID_;
   Time timestamp_;
-  Price price_;
+  Price bidPrice_, askPrice_;
   Quantity quantity_;
-  Side takerSide_;
-  LiquidityFlag liquidityFlag_;
   MatchType matchType_;
 };
-} // namespace core
+} // namespace engine
 } // namespace ob
