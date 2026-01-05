@@ -16,5 +16,11 @@
   "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -IC:/Users/Tolga/Documents/dev/projects/orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookApp.dir\\src\\main.cpp.obj -c C:\\Users\\Tolga\\Documents\\dev\\projects\\orderbook\\src\\main.cpp",
   "file": "C:\\Users\\Tolga\\Documents\\dev\\projects\\orderbook\\src\\main.cpp",
   "output": "CMakeFiles\\OrderBookApp.dir\\src\\main.cpp.obj"
+},
+{
+  "directory": "C:/Users/Tolga/Documents/dev/projects/orderbook/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -IC:/Users/Tolga/Documents/dev/projects/orderbook/src -g -std=gnu++23 -o CMakeFiles\\OrderBookTests.dir\\test\\test.cpp.obj -c C:\\Users\\Tolga\\Documents\\dev\\projects\\orderbook\\test\\test.cpp",
+  "file": "C:\\Users\\Tolga\\Documents\\dev\\projects\\orderbook\\test\\test.cpp",
+  "output": "CMakeFiles\\OrderBookTests.dir\\test\\test.cpp.obj"
 }
 ]

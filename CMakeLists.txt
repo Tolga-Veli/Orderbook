@@ -16,3 +16,13 @@ file(GLOB_RECURSE SOURCES
 )
 
 add_executable(OrderBookApp ${SOURCES})
+
+enable_testing()
+file(GLOB_RECURSE TEST_SOURCE
+    "test/*.hpp"
+    "test/*.cpp"
+)
+
+add_executable(OrderBookTests ${TEST_SOURCE})
+target_link_libraries(OrderBookTests gtest gtest_main)
+add_test(NAME OrderbookTests COMMAND OrderBookTests)

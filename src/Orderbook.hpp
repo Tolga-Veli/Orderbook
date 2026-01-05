@@ -22,7 +22,7 @@ public:
   void CancelAllOrders();
   void RemoveFillAndKill();
 
-  void SetMatchingStrategy(std::unique_ptr<IMatchingEngine> engine) {
+  void SetMatchingStrategy(std::unique_ptr<IMatchingEngine> &engine) {
     matchingEngine_ = std::move(engine);
   }
 

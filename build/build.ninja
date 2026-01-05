@@ -92,6 +92,54 @@ build OrderBookApp.exe: CXX_EXECUTABLE_LINKER__OrderBookApp_Debug CMakeFiles/Ord
   TARGET_IMPLIB = libOrderBookApp.dll.a
   TARGET_PDB = OrderBookApp.exe.dbg
 
+# =============================================================================
+# Object build statements for EXECUTABLE target OrderBookTests
+
+
+#############################################
+# Order-only phony target for OrderBookTests
+
+build cmake_object_order_depends_target_OrderBookTests: phony || .
+
+build CMakeFiles/OrderBookTests.dir/test/test.cpp.obj: CXX_COMPILER__OrderBookTests_unscanned_Debug C$:/Users/Tolga/Documents/dev/projects/orderbook/test/test.cpp || cmake_object_order_depends_target_OrderBookTests
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles\OrderBookTests.dir\test\test.cpp.obj.d
+  FLAGS = -g -std=gnu++23
+  INCLUDES = -IC:/Users/Tolga/Documents/dev/projects/orderbook/src
+  OBJECT_DIR = CMakeFiles\OrderBookTests.dir
+  OBJECT_FILE_DIR = CMakeFiles\OrderBookTests.dir\test
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target OrderBookTests
+
+
+#############################################
+# Link the executable OrderBookTests.exe
+
+build OrderBookTests.exe: CXX_EXECUTABLE_LINKER__OrderBookTests_Debug CMakeFiles/OrderBookTests.dir/test/test.cpp.obj
+  CONFIG = Debug
+  FLAGS = -g
+  LINK_LIBRARIES = -lgtest  -lgtest_main  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  OBJECT_DIR = CMakeFiles\OrderBookTests.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = OrderBookTests.exe
+  TARGET_IMPLIB = libOrderBookTests.dll.a
+  TARGET_PDB = OrderBookTests.exe.dbg
+
+
+#############################################
+# Utility command for test
+
+build CMakeFiles/test.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Tolga\Documents\dev\projects\orderbook\build && C:\msys64\mingw64\bin\ctest.exe "
+  DESC = Running tests...
+  pool = console
+  restat = 1
+
+build test: phony CMakeFiles/test.util
+
 
 #############################################
 # Utility command for edit_cache
@@ -120,6 +168,8 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 
 build OrderBookApp: phony OrderBookApp.exe
 
+build OrderBookTests: phony OrderBookTests.exe
+
 # =============================================================================
 # Folder targets.
 
@@ -128,7 +178,7 @@ build OrderBookApp: phony OrderBookApp.exe
 #############################################
 # Folder: C:/Users/Tolga/Documents/dev/projects/orderbook/build
 
-build all: phony OrderBookApp.exe
+build all: phony OrderBookApp.exe OrderBookTests.exe
 
 # =============================================================================
 # Built-in targets
@@ -137,7 +187,7 @@ build all: phony OrderBookApp.exe
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja C$:/Users/Tolga/Documents/dev/projects/orderbook/build/cmake_install.cmake: RERUN_CMAKE | C$:/Users/Tolga/Documents/dev/projects/orderbook/CMakeLists.txt C$:/msys64/mingw64/share/cmake/Modules/CMakeCXXInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCommonLanguageInclude.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeGenericSystem.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeInitializeConfigs.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeLanguageInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeRCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Internal/CMakeCXXLinkerInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/Internal/CMakeCommonLinkerInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/Linker/GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Linker/GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Linker/GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Linker/Windows-GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Linker/Windows-GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-Initialize.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-windres.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/4.0.2/CMakeCXXCompiler.cmake CMakeFiles/4.0.2/CMakeRCCompiler.cmake CMakeFiles/4.0.2/CMakeSystem.cmake
+build build.ninja C$:/Users/Tolga/Documents/dev/projects/orderbook/build/cmake_install.cmake C$:/Users/Tolga/Documents/dev/projects/orderbook/build/CTestTestfile.cmake: RERUN_CMAKE | C$:/Users/Tolga/Documents/dev/projects/orderbook/CMakeLists.txt C$:/msys64/mingw64/share/cmake/Modules/CMakeCXXInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCommonLanguageInclude.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeGenericSystem.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeInitializeConfigs.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeLanguageInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeRCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Internal/CMakeCXXLinkerInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/Internal/CMakeCommonLinkerInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/Linker/GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Linker/GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Linker/GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Linker/Windows-GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Linker/Windows-GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-Initialize.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-windres.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/4.0.2/CMakeCXXCompiler.cmake CMakeFiles/4.0.2/CMakeRCCompiler.cmake CMakeFiles/4.0.2/CMakeSystem.cmake
   pool = console
 
 

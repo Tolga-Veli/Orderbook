@@ -5,7 +5,6 @@
 #include <iostream>
 
 int main() {
-
   std::mt19937 rng{1};
   std::uniform_int_distribution<int> dist(1, 100);
   int t = 1;
@@ -43,6 +42,7 @@ int main() {
     std::sort(removed.begin(), removed.end());
     for (int val : removed)
       std::cout << val << " ";
+    std::cout << '\n';
 
     orderbook.PrintOrderbook();
 
