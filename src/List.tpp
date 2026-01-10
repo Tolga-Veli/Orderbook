@@ -76,7 +76,7 @@ template <typename value_type> void List<value_type>::pop_back() {
 
 template <typename value_type>
 void List<value_type>::erase(const iterator &it) {
-  assert(size_ > 0);
+  assert(size_ > 0 && "Trying to erase an element from an empty list.");
   Node *data = it.base();
   if (size_ == 1) {
     data->clear();
@@ -99,7 +99,6 @@ void List<value_type>::erase(const iterator &it) {
 
   data->clear();
   delete data;
-  data = nullptr;
   size_--;
 }
 

@@ -2,6 +2,8 @@
 
 #include <cstdint>
 #include <chrono>
+#include <cassert>
+#include <string>
 #include <string_view>
 
 namespace ob {
@@ -25,6 +27,13 @@ enum class TimeInForce {
   FillAndKill
 };
 
+enum class MatchType {
+  Standard,
+  Midpoint,
+  HiddenLiquidity,
+  Auction,
+};
+
 enum class Flags : uint8_t {
   None = 0,
   Hidden = 1,
@@ -45,13 +54,6 @@ inline Flags &operator|=(Flags &a, Flags b) {
   return a;
 }
 
-enum class MatchType {
-  Standard,
-  Midpoint,
-  HiddenLiquidity,
-  Auction,
-};
-
 inline constexpr std::string_view to_string(Side side) {
   if (side == Side::Buy)
     return "Buy";
@@ -70,7 +72,7 @@ inline constexpr std::string_view to_string(OrderType order_type) {
   case OrderType::StopLimit:
     return "StopLimit";
   default:
-    throw std::logic_error("Missed an order type.");
+    assert(false && "Missed an order type.");
   }
 }
 
@@ -85,7 +87,7 @@ inline constexpr std::string_view to_string(TimeInForce tif) {
   case TimeInForce::FillOrKill:
     return "FillOrKill";
   default:
-    throw std::logic_error("Missed a time in force.");
+    assert(false && "Missed a time in force.");
   }
 }
 
@@ -118,7 +120,7 @@ inline constexpr std::string_view to_string(MatchType matchType) {
   case MatchType::Auction:
     return "Auction";
   default:
-    throw std::logic_error("Match Type doesn't exist.");
+    assert(false && "Match Type doesn't exist.");
   }
 }
 

@@ -3,11 +3,10 @@
 
 namespace ob {
 namespace engine {
+uint32_t IMatchingEngine::counter = 0;
 
 std::vector<Trade> FIFO_Matching::Match(Order &order, Orderbook &book) {
   std::vector<Trade> trades;
-  static size_t counter = 1;
-
   while (true) {
     if (!book.HasOrders())
       break;

@@ -14,13 +14,12 @@ class IMatchingEngine {
 public:
   virtual ~IMatchingEngine() = default;
   virtual std::vector<Trade> Match(Order &order, Orderbook &book) = 0;
+  static uint32_t counter;
 };
 
 class FIFO_Matching : public IMatchingEngine {
 public:
   std::vector<Trade> Match(Order &order, Orderbook &book) override;
-
-private:
 };
 } // namespace engine
 } // namespace ob
