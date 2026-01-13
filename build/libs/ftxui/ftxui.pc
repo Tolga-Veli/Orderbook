@@ -1,0 +1,9 @@
+prefix="C:/Program Files (x86)/Orderbook"
+libdir="C:/Program Files (x86)/Orderbook/lib"
+includedir="C:/Program Files (x86)/Orderbook/include"
+
+Name: ftxui
+Description: 
+Version: 6.1.9
+Cflags: -I${includedir}
+Libs: -L${libdir} -lftxui-component -lftxui-dom -lftxui-screen

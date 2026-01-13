@@ -1,8 +1,6 @@
 #pragma once
 
-namespace ob {
-namespace data {
-
+namespace ob::data {
 template <typename value_type> class List {
   struct Node {
     value_type data;
@@ -21,7 +19,7 @@ template <typename value_type> class List {
     void clear() { next = prev = nullptr; }
   };
 
-  template <typename pointer_t> struct iterator_base {
+  template <typename data_type, typename pointer_t> struct iterator_base {
   public:
     iterator_base() : pointer_(nullptr) {}
     explicit iterator_base(pointer_t ptr) : pointer_(ptr) {}
@@ -32,8 +30,8 @@ template <typename value_type> class List {
       return *this;
     }
 
-    value_type &operator*() const { return pointer_->data; }
-    value_type *operator->() const { return &(pointer_->data); }
+    data_type &operator*() const { return pointer_->data; }
+    data_type *operator->() const { return &(pointer_->data); }
 
     iterator_base &operator++() {
       pointer_ = pointer_->next;
@@ -71,7 +69,8 @@ template <typename value_type> class List {
     pointer_t pointer_;
   };
 
-  template <typename pointer_t> struct reverse_iterator_base {
+  template <typename data_type, typename pointer_t>
+  struct reverse_iterator_base {
   public:
     reverse_iterator_base() {}
     explicit reverse_iterator_base(pointer_t ptr) : pointer_(ptr) {}
@@ -83,8 +82,8 @@ template <typename value_type> class List {
       return *this;
     }
 
-    value_type &operator*() const { return pointer_->data; }
-    value_type *operator->() const { return &(pointer_->data); }
+    data_type &operator*() const { return pointer_->data; }
+    data_type *operator->() const { return &(pointer_->data); }
 
     reverse_iterator_base &operator++() {
       pointer_ = pointer_->prev;
@@ -123,25 +122,28 @@ template <typename value_type> class List {
   };
 
 public:
-  using iterator = iterator_base<Node *>;
-  using const_iterator = iterator_base<const Node *>;
-  using reverse_iterator = reverse_iterator_base<Node *>;
-  using const_reverse_iterator = reverse_iterator_base<const Node *>;
+  using iterator = iterator_base<value_type, Node *>;
+  using const_iterator = iterator_base<const value_type, const Node *>;
+  using reverse_iterator = reverse_iterator_base<value_type, Node *>;
+  using const_reverse_iterator =
+      reverse_iterator_base<const value_type, const Node *>;
 
   List() {}
   ~List() { clear(); }
 
-  iterator begin() { return iterator(head_); }
-  iterator end() { return iterator(tail_); }
-  const_iterator begin() const { return const_iterator(head_); }
-  const_iterator end() const { return const_iterator(tail_); }
+  iterator begin() { return iterator(m_Head); }
+  iterator end() { return iterator(nullptr); }
+  const_iterator begin() const { return const_iterator(m_Head); }
+  const_iterator end() const { return const_iterator(nullptr); }
 
-  reverse_iterator rbegin() { return reverse_iterator(tail_); }
-  reverse_iterator rend() { return reverse_iterator(head_); }
+  reverse_iterator rbegin() { return reverse_iterator(m_Tail); }
+  reverse_iterator rend() { return reverse_iterator(nullptr); }
   const_reverse_iterator rbegin() const {
-    return const_reverse_iterator(tail_);
+    return const_reverse_iterator(m_Tail);
   }
-  const_reverse_iterator rend() const { return const_reverse_iterator(head_); }
+  const_reverse_iterator rend() const {
+    return const_reverse_iterator(nullptr);
+  }
 
   template <typename T> iterator push_front(T &&data);
   template <typename T> iterator push_back(T &&data);
@@ -153,11 +155,10 @@ public:
 
   value_type &front() const;
   value_type &back() const;
-  bool empty() const { return size_ == 0; }
+  bool empty() const { return m_Size == 0; }
 
 private:
-  Node *head_ = nullptr, *tail_ = nullptr;
-  size_t size_ = 0;
+  Node *m_Head = nullptr, *m_Tail = nullptr;
+  size_t m_Size = 0;
 };
-} // namespace data
-} // namespace ob
+} // namespace ob::data

@@ -1,88 +1,87 @@
 #include <cassert>
 #include "List.hpp"
 
-namespace ob {
-namespace data {
+namespace ob::data {
 template <typename value_type>
 template <typename T>
 List<value_type>::iterator List<value_type>::push_front(T &&data) {
-  if (!head_) {
-    head_ = tail_ = new Node(std::forward<value_type>(data));
-    size_++;
-    return iterator(head_);
+  if (!m_Head) {
+    m_Head = m_Tail = new Node(std::forward<T>(data));
+    m_Size++;
+    return iterator(m_Head);
   }
 
-  Node *v = new Node(std::forward<value_type>(data));
-  head_->prev = v;
-  v->next = head_;
-  head_ = v;
-  size_++;
+  Node *v = new Node(std::forward<T>(data));
+  m_Head->prev = v;
+  v->next = m_Head;
+  m_Head = v;
+  m_Size++;
   return iterator(v);
 }
 
 template <typename value_type>
 template <typename T>
 List<value_type>::iterator List<value_type>::push_back(T &&data) {
-  if (!tail_) {
-    head_ = tail_ = new Node(std::forward<value_type>(data));
-    size_++;
-    return iterator(tail_);
+  if (!m_Tail) {
+    m_Head = m_Tail = new Node(std::forward<T>(data));
+    m_Size++;
+    return iterator(m_Tail);
   }
 
-  Node *v = new Node(std::forward<value_type>(data));
-  v->prev = tail_;
-  tail_->next = v;
-  tail_ = v;
-  size_++;
+  Node *v = new Node(std::forward<T>(data));
+  v->prev = m_Tail;
+  m_Tail->next = v;
+  m_Tail = v;
+  m_Size++;
   return iterator(v);
 }
 
 template <typename value_type> void List<value_type>::pop_front() {
-  assert(head_ != nullptr && "Trying to erase an element from an empty list");
-  if (tail_ == head_) {
-    tail_->clear(), head_->clear();
-    delete head_;
-    tail_ = head_ = nullptr;
-    size_--;
+  assert(m_Head != nullptr && "Trying to erase an element from an empty list");
+  if (m_Tail == m_Head) {
+    m_Tail->clear(), m_Head->clear();
+    delete m_Head;
+    m_Tail = m_Head = nullptr;
+    m_Size--;
     return;
   }
 
-  Node *tmp = head_;
-  head_ = head_->next;
-  head_->prev = nullptr;
+  Node *tmp = m_Head;
+  m_Head = m_Head->next;
+  m_Head->prev = nullptr;
 
   tmp->clear();
   delete tmp;
-  size_--;
+  m_Size--;
 }
 
 template <typename value_type> void List<value_type>::pop_back() {
-  assert(tail_ != nullptr && "Trying to erase an element from an empty list.");
-  if (tail_ == head_) {
-    tail_->clear(), head_->clear();
-    delete tail_;
-    tail_ = head_ = nullptr;
-    size_--;
+  assert(m_Tail != nullptr && "Trying to erase an element from an empty list.");
+  if (m_Tail == m_Head) {
+    m_Tail->clear(), m_Head->clear();
+    delete m_Tail;
+    m_Tail = m_Head = nullptr;
+    m_Size--;
     return;
   }
 
-  Node *tmp = tail_;
-  tail_ = tail_->prev;
-  tail_->next = nullptr;
+  Node *tmp = m_Tail;
+  m_Tail = m_Tail->prev;
+  m_Tail->next = nullptr;
   tmp->clear();
   delete tmp;
-  size_--;
+  m_Size--;
 }
 
 template <typename value_type>
 void List<value_type>::erase(const iterator &it) {
-  assert(size_ > 0 && "Trying to erase an element from an empty list.");
+  assert(m_Size > 0 && "Trying to erase an element from an empty list.");
   Node *data = it.base();
-  if (size_ == 1) {
+  if (m_Size == 1) {
     data->clear();
     delete data;
-    head_ = tail_ = nullptr;
-    size_ = 0;
+    m_Head = m_Tail = nullptr;
+    m_Size = 0;
     return;
   }
 
@@ -92,37 +91,35 @@ void List<value_type>::erase(const iterator &it) {
   if (nxt)
     nxt->prev = prv;
 
-  if (data == tail_)
-    tail_ = prv;
-  if (data == head_)
-    head_ = nxt;
+  if (data == m_Tail)
+    m_Tail = prv;
+  if (data == m_Head)
+    m_Head = nxt;
 
   data->clear();
   delete data;
-  size_--;
+  m_Size--;
 }
 
 template <typename value_type> void List<value_type>::clear() {
-  Node *curr = head_;
+  Node *curr = m_Head;
   while (curr) {
     Node *nxt = curr->next;
     curr->clear();
     delete curr;
     curr = nxt;
   }
-  head_ = tail_ = nullptr;
-  size_ = 0;
+  m_Head = m_Tail = nullptr;
+  m_Size = 0;
 }
 
 template <typename value_type> value_type &List<value_type>::front() const {
-  assert(head_ != nullptr && "Trying to access the front of an empty list");
-  return head_->data;
+  assert(m_Head != nullptr && "Trying to access the front of an empty list");
+  return m_Head->data;
 }
 
 template <typename value_type> value_type &List<value_type>::back() const {
-  assert(tail_ != nullptr && "Trying to access the back of an empty list");
-  return tail_->data;
+  assert(m_Tail != nullptr && "Trying to access the back of an empty list");
+  return m_Tail->data;
 }
-
-} // namespace data
-} // namespace ob
+} // namespace ob::data

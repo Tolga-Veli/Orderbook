@@ -5,9 +5,10 @@
 #include <cassert>
 #include <string>
 #include <string_view>
+#include <iomanip>
+#include <sstream>
 
 namespace ob {
-namespace engine {
 using OrderID = uint64_t;
 using ClientID = uint64_t;
 using TradeID = uint64_t;
@@ -52,6 +53,20 @@ inline Flags operator&(Flags a, Flags b) {
 inline Flags &operator|=(Flags &a, Flags b) {
   a = a | b;
   return a;
+}
+
+namespace core {
+inline std::string format_price(Price price) {
+  std::stringstream ss;
+  ss << std::fixed << std::setprecision(2)
+     << (static_cast<double>(price) / 100.0);
+  return ss.str();
+}
+
+inline std::string format_quantity(ob::Quantity value) {
+  std::stringstream ss;
+  ss << value;
+  return ss.str();
 }
 
 inline constexpr std::string_view to_string(Side side) {
@@ -124,9 +139,9 @@ inline constexpr std::string_view to_string(MatchType matchType) {
   }
 }
 
-static Time GetCurrentTime() {
+inline static Time GetCurrentTime() {
   return std::chrono::duration_cast<Time>(
       std::chrono::steady_clock::now().time_since_epoch());
 }
-}; // namespace engine
+} // namespace core
 } // namespace ob

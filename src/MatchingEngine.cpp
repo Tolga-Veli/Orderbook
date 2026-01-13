@@ -3,7 +3,7 @@
 
 namespace ob {
 namespace engine {
-uint32_t IMatchingEngine::counter = 0;
+uint32_t IMatchingEngine::m_Counter = 0;
 
 std::vector<Trade> FIFO_Matching::Match(Order &order, Orderbook &book) {
   std::vector<Trade> trades;
@@ -30,9 +30,9 @@ std::vector<Trade> FIFO_Matching::Match(Order &order, Orderbook &book) {
     if (ask->isFilled())
       book.CancelOrder(ask->GetOrderID());
 
-    trades.emplace_back(std::move(
-        Trade{counter++, bid->GetOrderID(), ask->GetOrderID(), bid->GetPrice(),
-              ask->GetPrice(), quantity, MatchType::Standard}));
+    trades.emplace_back(std::move(Trade{
+        m_Counter++, bid->GetOrderID(), ask->GetOrderID(), bid->GetPrice(),
+        ask->GetPrice(), quantity, MatchType::Standard}));
   }
 
   book.RemoveFillAndKill();

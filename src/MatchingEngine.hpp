@@ -14,7 +14,7 @@ class IMatchingEngine {
 public:
   virtual ~IMatchingEngine() = default;
   virtual std::vector<Trade> Match(Order &order, Orderbook &book) = 0;
-  static uint32_t counter;
+  static uint32_t m_Counter;
 };
 
 class FIFO_Matching : public IMatchingEngine {

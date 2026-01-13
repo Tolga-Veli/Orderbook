@@ -5,17 +5,21 @@
 #include <optional>
 
 #include "List.tpp"
-#include "Order.hpp"
-#include "Trade.hpp"
+#include "OrderbookSnapshot.hpp"
 #include "MatchingEngine.hpp"
 
-namespace ob {
-namespace engine {
-
+namespace ob::engine {
 class Orderbook {
 public:
-  void AddOrder(ClientID clientID, Price price, Quantity quantity, Side side,
-                OrderType _order_type, TimeInForce tif, Flags flag);
+  Orderbook() : m_MatchingEngine(std::make_unique<FIFO_Matching>()) {}
+  ~Orderbook() { Shutdown(); }
+  Orderbook(const Orderbook &) = delete;
+  void operator=(const Orderbook &) = delete;
+  Orderbook(Orderbook &&) = delete;
+  void operator=(Orderbook &&) = delete;
+
+  OrderID AddOrder(ClientID clientID, Price price, Quantity quantity, Side side,
+                   OrderType _order_type, TimeInForce tif, Flags flag);
 
   void ModifyOrder(OrderID orderID, Price new_price, Quantity new_quantity);
   void CancelOrder(OrderID id);
@@ -23,7 +27,7 @@ public:
   void RemoveFillAndKill();
 
   void SetMatchingStrategy(std::unique_ptr<IMatchingEngine> &engine) {
-    matchingEngine_ = std::move(engine);
+    m_MatchingEngine = std::move(engine);
   }
 
   [[nodiscard]] bool HasOrders() const;
@@ -37,15 +41,10 @@ public:
   Price GetSpread() const;
   void GetDepth();
 
-  void PrintOrderbook();
-  const std::vector<Trade> &GetTradeHistory() const { return trades_; };
+  OrderbookSnapshot GetSnapshot(uint32_t depth) const;
 
-  Orderbook() : matchingEngine_(std::make_unique<FIFO_Matching>()) {}
-  Orderbook(const Orderbook &) = delete;
-  Orderbook(Orderbook &&) = delete;
-  void operator=(const Orderbook &) = delete;
-  void operator=(Orderbook &&) = delete;
-  ~Orderbook() { Shutdown(); }
+  void PrintOrderbook();
+  const std::vector<Trade> &GetTradeHistory() const { return m_Trades; };
 
 private:
   struct OrderPointer {
@@ -53,16 +52,15 @@ private:
     data::List<Order> *list_ptr;
   };
 
-  std::map<Price, data::List<Order>, std::greater<Price>> bids_;
-  std::map<Price, data::List<Order>, std::less<Price>> asks_;
-  std::unordered_map<OrderID, OrderPointer> orders_;
-  std::vector<Trade> trades_;
+  std::map<Price, data::List<Order>, std::greater<Price>> m_Bids;
+  std::map<Price, data::List<Order>, std::less<Price>> m_Asks;
+  std::unordered_map<OrderID, OrderPointer> m_Orders;
 
-  std::unique_ptr<IMatchingEngine> matchingEngine_;
+  std::unique_ptr<IMatchingEngine> m_MatchingEngine;
+  std::vector<Trade> m_Trades;
 
   void MatchIncomingOrders(Order &order);
   void AddOrderInternal(Order &&order);
   void Shutdown();
 };
-} // namespace engine
-} // namespace ob
+} // namespace ob::engine
