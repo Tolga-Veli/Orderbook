@@ -18,8 +18,10 @@ public:
   Orderbook(Orderbook &&) = delete;
   void operator=(Orderbook &&) = delete;
 
-  OrderID AddOrder(ClientID clientID, Price price, Quantity quantity, Side side,
-                   OrderType _order_type, TimeInForce tif, Flags flag);
+  [[nodiscard]] OrderID AddOrder(ClientID clientID, Price price,
+                                 Quantity quantity, Side side,
+                                 OrderType _order_type, TimeInForce tif,
+                                 Flags flag);
 
   void ModifyOrder(OrderID orderID, Price new_price, Quantity new_quantity);
   void CancelOrder(OrderID id);
@@ -31,20 +33,20 @@ public:
   }
 
   [[nodiscard]] bool HasOrders() const;
-  [[nodiscard]] std::optional<std::reference_wrapper<Order>>
-  GetOrder(OrderID orderID) const;
-
-  Order *GetBestBid() const;
-  Order *GetBestAsk() const;
+  [[nodiscard]] std::optional<Order> GetOrder(OrderID orderID) const;
+  [[nodiscard]] Order *GetBestBid() const;
+  [[nodiscard]] Order *GetBestAsk() const;
   Quantity GetVolumeAtPrice(Price price) const;
   std::vector<Order> GetOrderByPrice(Price price) const;
   Price GetSpread() const;
   void GetDepth();
 
-  OrderbookSnapshot GetSnapshot(uint32_t depth) const;
+  [[nodiscard]] OrderbookSnapshot GetSnapshot(uint32_t depth) const;
 
   void PrintOrderbook();
-  const std::vector<Trade> &GetTradeHistory() const { return m_Trades; };
+  [[nodiscard]] const std::vector<Trade> &GetTradeHistory() const {
+    return m_Trades;
+  };
 
 private:
   struct OrderPointer {

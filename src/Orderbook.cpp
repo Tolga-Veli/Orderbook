@@ -3,9 +3,10 @@
 
 namespace ob {
 namespace engine {
-OrderID Orderbook::AddOrder(ClientID clientID, Price price, Quantity quantity,
-                            Side side, OrderType order_type, TimeInForce tif,
-                            Flags flag) {
+[[nodiscard]] OrderID Orderbook::AddOrder(ClientID clientID, Price price,
+                                          Quantity quantity, Side side,
+                                          OrderType order_type, TimeInForce tif,
+                                          Flags flag) {
   static OrderID orderID_counter = 1;
   AddOrderInternal(Order{orderID_counter, clientID, price, quantity, side,
                          order_type, tif, flag});
@@ -36,7 +37,7 @@ void Orderbook::ModifyOrder(OrderID orderID, Price new_price,
   Flags flags = order.GetFlags();
 
   CancelOrder(orderID);
-  AddOrder(cid, new_price, new_quantity, side, type, tif, flags);
+  auto tmp = AddOrder(cid, new_price, new_quantity, side, type, tif, flags);
 }
 
 void Orderbook::CancelOrder(OrderID id) {
@@ -86,8 +87,7 @@ void Orderbook::RemoveFillAndKill() {
   return !m_Bids.empty() && !m_Asks.empty();
 }
 
-[[nodiscard]] std::optional<std::reference_wrapper<Order>>
-Orderbook::GetOrder(OrderID orderID) const {
+[[nodiscard]] std::optional<Order> Orderbook::GetOrder(OrderID orderID) const {
   auto it = m_Orders.find(orderID);
   if (it == m_Orders.end())
     return std::nullopt;
