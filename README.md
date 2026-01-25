@@ -56,3 +56,14 @@ High-level components:
 - `MatchingEngine` — executes matching logic
 - `Renderer` — terminal UI for visualization
 
+
+## How to build the project
+
+This project uses **CMake**. To build it, run the following commands from the project root:
+
+```bash
+mkdir build
+cd build
+cmake ..
+cmake --build .
+```
