@@ -83,7 +83,7 @@ void Orderbook::RemoveFillAndKill() {
   }
 }
 
-[[nodiscard]] bool Orderbook::HasOrders() const {
+[[nodiscard]] bool Orderbook::HasOrders() const noexcept {
   return !m_Bids.empty() && !m_Asks.empty();
 }
 
@@ -153,7 +153,7 @@ void Orderbook::PrintOrderbook() {
   std::cout << "------------------\n";
 }
 
-void Orderbook::Shutdown() {
+void Orderbook::Shutdown() noexcept {
   m_Orders.clear();
   m_Bids.clear();
   m_Asks.clear();

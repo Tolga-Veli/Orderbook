@@ -9,27 +9,27 @@ class Order {
 public:
   Order() = delete;
   Order(OrderID orderID, ClientID clientID, Price price, Quantity quantity,
-        Side side, OrderType order_type, TimeInForce tif, Flags flag)
+        Side side, OrderType order_type, TimeInForce tif, Flags flag) noexcept
       : m_OrderID(orderID), m_ClientID(clientID),
         m_Timestamp(core::GetCurrentTime()), m_Price(price),
         m_IntialQuantity(quantity), m_RemainingQuantity(quantity), m_Side(side),
         m_OrderType(order_type), m_TimeInForce(tif), m_Flags(flag) {}
-  ~Order() = default;
+  ~Order() noexcept = default;
 
-  const OrderID &GetOrderID() const { return m_OrderID; }
-  const ClientID &GetClientID() const { return m_ClientID; }
-  Price GetPrice() const { return m_Price; }
-  Quantity GetInitialQuantity() const { return m_IntialQuantity; }
-  Quantity GetRemainingQuantity() const { return m_RemainingQuantity; }
-  Quantity GetFilledQuantity() const {
+  const OrderID &GetOrderID() const noexcept { return m_OrderID; }
+  const ClientID &GetClientID() const noexcept { return m_ClientID; }
+  Price GetPrice() const noexcept { return m_Price; }
+  Quantity GetInitialQuantity() const noexcept { return m_IntialQuantity; }
+  Quantity GetRemainingQuantity() const noexcept { return m_RemainingQuantity; }
+  Quantity GetFilledQuantity() const noexcept {
     return m_IntialQuantity - m_RemainingQuantity;
   }
-  Time GetTime() const { return m_Timestamp; }
-  Side GetSide() const { return m_Side; }
-  OrderType GetOrderType() const { return m_OrderType; }
-  TimeInForce GetTimeInForce() const { return m_TimeInForce; }
-  Flags GetFlags() const { return m_Flags; }
-  bool isFilled() const { return m_RemainingQuantity == 0; }
+  Time GetTime() const noexcept { return m_Timestamp; }
+  Side GetSide() const noexcept { return m_Side; }
+  OrderType GetOrderType() const noexcept { return m_OrderType; }
+  TimeInForce GetTimeInForce() const noexcept { return m_TimeInForce; }
+  Flags GetFlags() const noexcept { return m_Flags; }
+  bool isFilled() const noexcept { return m_RemainingQuantity == 0; }
 
   void ModifyOrder(Price newm_Price, Quantity new_quantity) {
     Quantity filled = GetFilledQuantity();

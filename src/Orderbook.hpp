@@ -3,6 +3,7 @@
 #include <map>
 #include <unordered_map>
 #include <optional>
+#include <thread>
 
 #include "List.tpp"
 #include "OrderbookSnapshot.hpp"
@@ -32,7 +33,7 @@ public:
     m_MatchingEngine = std::move(engine);
   }
 
-  [[nodiscard]] bool HasOrders() const;
+  [[nodiscard]] bool HasOrders() const noexcept;
   [[nodiscard]] std::optional<Order> GetOrder(OrderID orderID) const;
   [[nodiscard]] Order *GetBestBid() const;
   [[nodiscard]] Order *GetBestAsk() const;
@@ -63,6 +64,6 @@ private:
 
   void MatchIncomingOrders(Order &order);
   void AddOrderInternal(Order &&order);
-  void Shutdown();
+  void Shutdown() noexcept;
 };
 } // namespace ob::engine
