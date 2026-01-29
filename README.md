@@ -34,8 +34,8 @@ The orderbook enforces the following guarantees:
 
 The implementation is performance oriented.
 
-- Each price is a key in a Red-Black tree from the STL that holds a queue (`std::map<Price, data::List<Order>>`)
-- The queue is implemented as a custom linked list with STL-compliant iterators stored in a hash table for O(1) removal of orders in the queue
+- Each price is a key in a Red-Black tree from the STL that holds a linked list (`std::pmr::map<Price, std::pmr::list<Order>>`)
+- The linked list is used with iterators stored in a hash table for O(1) removal of orders
 - Matching operations prioritize best bid / best ask
 
 **Asymptotic behavior:**
