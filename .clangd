@@ -1,0 +1,5 @@
+CompileFlags:
+  Add:
+    - -std=gnu++23
+    - -Ilibs/FTXUI/include
+

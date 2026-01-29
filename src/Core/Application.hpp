@@ -17,7 +17,7 @@ private:
   engine::Orderbook m_Orderbook;
   render::Renderer m_Renderer;
   bool m_Running = false;
-  const std::chrono::milliseconds m_FrameTime{200}; // ~30 FPS
+  static constexpr std::chrono::milliseconds m_FrameTime{33};
 
   void Tick();
 };

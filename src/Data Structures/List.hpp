@@ -1,5 +1,16 @@
 #pragma once
 
+#include <memory>
+#include <utility>
+
+namespace ob::Memory {
+// Write a memory pool like this one:
+// https://8dcc.github.io/programming/pool-allocator.html I have implemented in
+// C and it works; TODO: implement in C++
+
+template <class T> class Pool {};
+} // namespace ob::Memory
+
 namespace ob::data {
 template <typename value_type> class List {
   struct Node {
@@ -16,7 +27,6 @@ template <typename value_type> class List {
       prev = other.prev;
       return *this;
     }
-    void clear() { next = prev = nullptr; }
   };
 
   template <typename data_type, typename pointer_t> struct iterator_base {
@@ -127,9 +137,17 @@ public:
   using reverse_iterator = reverse_iterator_base<value_type, Node *>;
   using const_reverse_iterator =
       reverse_iterator_base<const value_type, const Node *>;
+  using node_type = Node;
+  using Allocator = Memory::Pool<node_type>;
 
-  List() {}
+  List() = default;
+  explicit List(const std::shared_ptr<Allocator> &pool) : m_Pool(pool) {}
   ~List() { clear(); }
+
+  List(const List &other) = delete;
+  List &operator=(const List &other) = delete;
+  List(List &&other) = delete;
+  List &operator=(List &&other) = delete;
 
   iterator begin() { return iterator(m_Head); }
   iterator end() { return iterator(nullptr); }
@@ -160,5 +178,6 @@ public:
 private:
   Node *m_Head = nullptr, *m_Tail = nullptr;
   size_t m_Size = 0;
+  std::shared_ptr<Allocator> m_Pool{nullptr};
 };
 } // namespace ob::data

@@ -2,8 +2,6 @@
 
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
-#include <mutex>
-#include <thread>
 
 #include "OrderbookSnapshot.hpp"
 
@@ -16,7 +14,7 @@ public:
   void Init();
   void Shutdown();
 
-  void Render(const ob::engine::OrderbookSnapshot &snashot);
+  void Render(const ob::engine::OrderbookSnapshot &snapshot);
 
 private:
   ftxui::ScreenInteractive m_Screen;

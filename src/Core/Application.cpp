@@ -1,5 +1,5 @@
-#include <thread>
 #include <random>
+#include <thread>
 
 #include "Application.hpp"
 

@@ -1,12 +1,12 @@
 #pragma once
 
-#include <cstdint>
-#include <chrono>
 #include <cassert>
-#include <string>
-#include <string_view>
+#include <chrono>
+#include <cstdint>
 #include <iomanip>
 #include <sstream>
+#include <string>
+#include <string_view>
 
 namespace ob {
 using OrderID = uint64_t;
@@ -19,6 +19,8 @@ using Time = std::chrono::nanoseconds;
 enum class Side { Buy = 0, Sell };
 
 enum class OrderType { Limit = 0, Market, Stop, StopLimit };
+
+enum class OrderState { New = 0, PartiallyFilled, Filled, Cancelled, Rejected };
 
 enum class TimeInForce {
   DayOrder = 0,

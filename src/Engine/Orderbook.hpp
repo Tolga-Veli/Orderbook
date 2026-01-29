@@ -1,21 +1,26 @@
 #pragma once
 
+#include <list>
 #include <map>
-#include <unordered_map>
+#include <memory_resource>
 #include <optional>
-#include <thread>
+#include <unordered_map>
 
-#include "List.tpp"
-#include "OrderbookSnapshot.hpp"
 #include "MatchingEngine.hpp"
+#include "OrderbookSnapshot.hpp"
 
 namespace ob::engine {
+static constexpr std::size_t MEMORY_BUFFER_SIZE = 64 * (1 << 20); // 64 MiB
 class Orderbook {
 public:
-  Orderbook() : m_MatchingEngine(std::make_unique<FIFO_Matching>()) {}
-  ~Orderbook() { Shutdown(); }
+  Orderbook()
+      : m_Bids(&m_Resource), m_Asks(&m_Resource), m_Orders(&m_Resource),
+        m_MatchingEngine(std::make_unique<FIFO_Matching>()) {}
+  ~Orderbook() {}
+
   Orderbook(const Orderbook &) = delete;
   void operator=(const Orderbook &) = delete;
+
   Orderbook(Orderbook &&) = delete;
   void operator=(Orderbook &&) = delete;
 
@@ -35,8 +40,8 @@ public:
 
   [[nodiscard]] bool HasOrders() const noexcept;
   [[nodiscard]] std::optional<Order> GetOrder(OrderID orderID) const;
-  [[nodiscard]] Order *GetBestBid() const;
-  [[nodiscard]] Order *GetBestAsk() const;
+  [[nodiscard]] Order *GetBestBid();
+  [[nodiscard]] Order *GetBestAsk();
   Quantity GetVolumeAtPrice(Price price) const;
   std::vector<Order> GetOrderByPrice(Price price) const;
   Price GetSpread() const;
@@ -50,14 +55,24 @@ public:
   };
 
 private:
+  /* struct OrderPointer {
+     data::List<Order>::iterator iter;
+     data::List<Order> *list_ptr;
+   };
+
+   std::shared_ptr<Allocator> m_Pool{nullptr};
+   std::map<Price, data::List<Order>, std::greater<Price>> m_Bids;
+   std::map<Price, data::List<Order>, std::less<Price>> m_Asks;*/
+
   struct OrderPointer {
-    data::List<Order>::iterator iter;
-    data::List<Order> *list_ptr;
+    std::pmr::list<Order>::iterator iter;
+    std::pmr::list<Order> *list_ptr;
   };
 
-  std::map<Price, data::List<Order>, std::greater<Price>> m_Bids;
-  std::map<Price, data::List<Order>, std::less<Price>> m_Asks;
-  std::unordered_map<OrderID, OrderPointer> m_Orders;
+  std::pmr::monotonic_buffer_resource m_Resource{MEMORY_BUFFER_SIZE};
+  std::pmr::map<Price, std::pmr::list<Order>, std::greater<Price>> m_Bids;
+  std::pmr::map<Price, std::pmr::list<Order>, std::less<Price>> m_Asks;
+  std::pmr::unordered_map<OrderID, OrderPointer> m_Orders;
 
   std::unique_ptr<IMatchingEngine> m_MatchingEngine;
   std::vector<Trade> m_Trades;

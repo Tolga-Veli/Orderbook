@@ -14,14 +14,14 @@ public:
         m_BidPrice(bidPrice), m_AskPrice(askPrice), m_Quantity(quantity),
         m_MatchType(matchType), m_Timestamp(core::GetCurrentTime()) {}
 
-  const TradeID GetTradeID() const { return m_TradeID; }
-  const OrderID GetBidOrderID() const { return m_BidOrderID; }
-  const OrderID GetAskOrderID() const { return m_AskOrderID; }
-  Time GetTimestamp() const { return m_Timestamp; }
-  Price GetAskPrice() const { return m_AskPrice; }
-  Price GetBidPrice() const { return m_BidPrice; }
-  Quantity GetQuantity() const { return m_Quantity; }
-  MatchType GetMatchType() const { return m_MatchType; }
+  const TradeID GetTradeID() const noexcept { return m_TradeID; }
+  const OrderID GetBidOrderID() const noexcept { return m_BidOrderID; }
+  const OrderID GetAskOrderID() const noexcept { return m_AskOrderID; }
+  Time GetTimestamp() const noexcept { return m_Timestamp; }
+  Price GetAskPrice() const noexcept { return m_AskPrice; }
+  Price GetBidPrice() const noexcept { return m_BidPrice; }
+  Quantity GetQuantity() const noexcept { return m_Quantity; }
+  MatchType GetMatchType() const noexcept { return m_MatchType; }
 
   void info() const {
     std::cout << "TradeID: " << m_TradeID << ", bidOrderID: " << m_BidOrderID

@@ -1,8 +1,7 @@
-#include <cassert>
 #include "Orderbook.hpp"
+#include <cassert>
 
-namespace ob {
-namespace engine {
+namespace ob::engine {
 [[nodiscard]] OrderID Orderbook::AddOrder(ClientID clientID, Price price,
                                           Quantity quantity, Side side,
                                           OrderType order_type, TimeInForce tif,
@@ -94,13 +93,13 @@ void Orderbook::RemoveFillAndKill() {
   return *(it->second.iter);
 }
 
-Order *Orderbook::GetBestBid() const {
+Order *Orderbook::GetBestBid() {
   if (m_Bids.empty())
     return nullptr;
   return &(m_Bids.begin()->second.front());
 }
 
-Order *Orderbook::GetBestAsk() const {
+Order *Orderbook::GetBestAsk() {
   if (m_Asks.empty())
     return nullptr;
   return &(m_Asks.begin()->second.front());
@@ -169,20 +168,27 @@ void Orderbook::AddOrderInternal(Order &&order) {
   if (m_Orders.count(order.GetOrderID()))
     return;
 
-  OrderPointer op;
-
+  OrderPointer op{};
   if (order.GetSide() == Side::Buy) {
-    auto &list = m_Bids[order.GetPrice()];
-    op.iter = list.push_back(std::move(order));
+    auto [it, inserted] = m_Bids.try_emplace(
+        order.GetPrice(), std::pmr::list<Order>(&m_Resource));
+    auto &list = it->second;
+
+    list.push_back(std::move(order));
+    op.iter = std::prev(list.end());
     op.list_ptr = &list;
   } else {
-    auto &list = m_Asks[order.GetPrice()];
-    op.iter = list.push_back(std::move(order));
+    auto [it, inserted] = m_Asks.try_emplace(
+        order.GetPrice(), std::pmr::list<Order>(&m_Resource));
+    auto &list = it->second;
+
+    list.push_back(std::move(order));
+    op.iter = std::prev(list.end());
     op.list_ptr = &list;
   }
-  m_Orders[order.GetOrderID()] = op;
-  MatchIncomingOrders(order);
-}
+  const OrderID id = op.iter->GetOrderID();
+  m_Orders[id] = op;
 
-} // namespace engine
-} // namespace ob
+  MatchIncomingOrders(*op.iter);
+}
+} // namespace ob::engine

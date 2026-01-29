@@ -31,15 +31,18 @@ public:
   Flags GetFlags() const noexcept { return m_Flags; }
   bool isFilled() const noexcept { return m_RemainingQuantity == 0; }
 
-  void ModifyOrder(Price newm_Price, Quantity new_quantity) {
-    Quantity filled = GetFilledQuantity();
+  void ModifyOrder(Price new_price, Quantity new_quantity) {
+    const Quantity filled = GetFilledQuantity();
     if (filled > new_quantity)
       throw std::logic_error(
-          "Modified quantity is higher than the already filled quantity.");
+          "Modified quantity is less than the already filled quantity.");
 
-    m_Price = newm_Price;
+    if (new_price != m_Price || new_quantity > m_IntialQuantity)
+      m_Timestamp = core::GetCurrentTime();
+
+    m_Price = new_price;
     m_RemainingQuantity = new_quantity - filled;
-    m_Timestamp = core::GetCurrentTime();
+    m_IntialQuantity = new_quantity;
   }
 
   void Fill(Quantity quantity) {
