@@ -1,6 +1,6 @@
 # Hermes-Orderbook
 
-A fast, single-threaded(for now) **C++23 limit orderbook** implementing **price–time priority matching**, with a simple terminal-based visualization and order flow simulation with random orders.
+A fast, single-threaded(for now) **C++ limit orderbook** implementing **price–time priority matching**, with a simple terminal-based visualization and order flow simulation with random orders.
 ![Live orderbook simulation](assets/orderbook.gif)
 
 
