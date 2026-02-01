@@ -3,21 +3,17 @@
 A fast, single-threaded(for now) **C++23 limit orderbook** implementing **price–time priority matching**, with a simple terminal-based visualization and order flow simulation with random orders.
 ![Live orderbook simulation](assets/orderbook.gif)
 
----
 
 ## Overview
 
 Hermes-Orderbook is focused on the **core mechanics of a limit orderbook**.  
 The project explores **data structure design, algorithmic complexity, and performance trade-offs** in order matching, without external dependencies.
 
----
-
 ## Features
 
 - Price–time priority order matching
 - Live terminal visualization of the orderbook
 
----
 
 ## Matching Rules & Guarantees
 
@@ -28,7 +24,6 @@ The orderbook enforces the following guarantees:
 - **Determinism:** identical inputs produce identical outputs
 - **Correct quantity handling:** no negative quantities; fully filled orders are removed
 
----
 
 ## Data Structures & Complexity
 
@@ -43,7 +38,6 @@ The implementation is performance oriented.
 - Order cancellation: *amortized O(1)*
 - Best price query: *O(1)*
 
----
 
 ## Architecture Overview
 
