@@ -1,122 +1,52 @@
-#include "Orderbook.hpp"
+#include "OrderBook.hpp"
 #include <cassert>
 
 namespace ob::engine {
-[[nodiscard]] OrderID Orderbook::AddOrder(ClientID clientID, Price price,
-                                          Quantity quantity, Side side,
-                                          OrderType order_type, TimeInForce tif,
-                                          Flags flag) {
-  static OrderID orderID_counter = 1;
-  AddOrderInternal(Order{orderID_counter, clientID, price, quantity, side,
-                         order_type, tif, flag});
-  orderID_counter++;
-  return orderID_counter;
-}
 
-void Orderbook::ModifyOrder(OrderID orderID, Price new_price,
-                            Quantity new_quantity) {
-  auto it = m_Orders.find(orderID);
-  if (it == m_Orders.end()) {
-    std::cout << "[INFO]" << "Order: " << orderID
-              << "not found to be modified\n";
-    return;
-  }
-
-  auto &order = *(it->second.iter);
-  if (new_price == order.GetPrice() &&
-      new_quantity < order.GetFilledQuantity()) {
-    order.ModifyOrder(new_price, new_quantity);
-    return;
-  }
-
-  ClientID cid = order.GetClientID();
-  Side side = order.GetSide();
-  OrderType type = order.GetOrderType();
-  TimeInForce tif = order.GetTimeInForce();
-  Flags flags = order.GetFlags();
-
-  CancelOrder(orderID);
-  auto tmp = AddOrder(cid, new_price, new_quantity, side, type, tif, flags);
-}
-
-void Orderbook::CancelOrder(OrderID id) {
-  auto it = m_Orders.find(id);
-  if (it == m_Orders.end()) {
-    std::cout << "[INFO]" << "Order: " << id << " not found\n";
-    return;
-  }
-
-  auto &iter = it->second.iter;
-  auto &orderList = *(it->second.list_ptr);
-
-  Price price = iter->GetPrice();
-  Side side = iter->GetSide();
-
-  orderList.erase(iter);
-  m_Orders.erase(it);
-
-  if (orderList.empty()) {
-    if (side == Side::Buy)
-      m_Bids.erase(price);
-    else
-      m_Asks.erase(price);
-  }
-}
-
-// TODO:
-void Orderbook::CancelAllOrders() {}
-
-void Orderbook::RemoveFillAndKill() {
-  if (!m_Bids.empty()) {
-    auto &[_, bids] = *m_Bids.begin();
-    auto order = bids.front();
-    if (order.GetTimeInForce() == TimeInForce::FillAndKill)
-      CancelOrder(order.GetOrderID());
-  }
-
-  if (!m_Asks.empty()) {
-    auto &[_, asks] = *m_Asks.begin();
-    auto &order = asks.front();
-    if (order.GetTimeInForce() == TimeInForce::FillAndKill)
-      CancelOrder(order.GetOrderID());
-  }
-}
-
-[[nodiscard]] bool Orderbook::HasOrders() const noexcept {
+bool OrderBook::HasOrders() const noexcept {
   return !m_Bids.empty() && !m_Asks.empty();
 }
 
-[[nodiscard]] std::optional<Order> Orderbook::GetOrder(OrderID orderID) const {
+std::optional<Order> OrderBook::GetOrder(OrderID orderID) const {
   auto it = m_Orders.find(orderID);
   if (it == m_Orders.end())
     return std::nullopt;
   return *(it->second.iter);
 }
 
-Order *Orderbook::GetBestBid() {
+Order *OrderBook::GetBestBid() {
   if (m_Bids.empty())
     return nullptr;
   return &(m_Bids.begin()->second.front());
 }
 
-Order *Orderbook::GetBestAsk() {
+Order *OrderBook::GetBestAsk() {
   if (m_Asks.empty())
     return nullptr;
   return &(m_Asks.begin()->second.front());
 }
 // TODO:
-Quantity Orderbook::GetVolumeAtPrice(Price price) const { return Quantity(0); }
+Quantity OrderBook::GetBidVolumeAtPrice(Price price) const {
+  Quantity total = 0;
+  auto it = m_Bids.find(price);
+  if (it != m_Bids.end())
+    for (const auto &order : it->second)
+      total += order.GetRemainingQuantity();
 
-// TODO:
-std::vector<Order> Orderbook::GetOrderByPrice(Price price) const { return {}; }
+  return total;
+}
 
-// TODO:
-Price Orderbook::GetSpread() const { return Price(0); }
+Quantity OrderBook::GetAskVolumeAtPrice(Price price) const {
+  Quantity total = 0;
+  auto it = m_Asks.find(price);
+  if (it != m_Asks.end())
+    for (const auto &order : it->second)
+      total += order.GetRemainingQuantity();
 
-// TODO:
-void Orderbook::GetDepth() {}
+  return total;
+}
 
-OrderbookSnapshot Orderbook::GetSnapshot(uint32_t depth) const {
+OrderBookSnapshot OrderBook::GetSnapshot(uint32_t depth) const {
   uint32_t curr_depth = 0;
   std::vector<std::pair<Price, Quantity>> bids, asks;
   for (const auto &[price, list] : m_Bids) {
@@ -145,26 +75,21 @@ OrderbookSnapshot Orderbook::GetSnapshot(uint32_t depth) const {
   return {bids, asks, m_Trades};
 }
 
-void Orderbook::PrintOrderbook() {
+void OrderBook::PrintOrderBook() const {
   std::cout << "------------------\n";
-  for (auto &[orderID, OrderPointer] : m_Orders)
+  for (const auto &[orderID, OrderPointer] : m_Orders)
     OrderPointer.iter->info();
   std::cout << "------------------\n";
 }
 
-void Orderbook::Shutdown() noexcept {
-  m_Orders.clear();
-  m_Bids.clear();
-  m_Asks.clear();
-}
+void OrderBook::Handle(const cmd::AddOrder &add) {
+  const auto &[clientID, clientOrderID, price, quantity, side, order_type, tif,
+               flags] = add;
 
-void Orderbook::MatchIncomingOrders(Order &order) {
-  auto trades = m_MatchingEngine->Match(order, *this);
-  for (const auto &trade : trades)
-    m_Trades.emplace_back(std::move(trade));
-}
+  static OrderID orderID_counter = 1;
+  const Order order{orderID_counter, clientID, price, quantity, side,
+                    order_type,      tif,      flags};
 
-void Orderbook::AddOrderInternal(Order &&order) {
   if (m_Orders.count(order.GetOrderID()))
     return;
 
@@ -190,5 +115,46 @@ void Orderbook::AddOrderInternal(Order &&order) {
   m_Orders[id] = op;
 
   MatchIncomingOrders(*op.iter);
+  return;
 }
+
+void OrderBook::Handle(const cmd::ModifyOrder &modify) {
+  const auto &[orderID, new_price, new_quantity] = modify;
+  auto it = m_Orders.find(orderID);
+  auto &order = *(it->second.iter);
+  if (new_price == order.GetPrice() &&
+      new_quantity < order.GetFilledQuantity()) {
+    order.ModifyOrder(new_price, new_quantity);
+  } else
+    throw std::logic_error("ModifyOrder:: The new quantity must be >= then the "
+                           "order's filled quantity");
+}
+
+void OrderBook::Handle(const cmd::CancelOrder &cancel) {
+  const auto &orderID = cancel.orderID;
+  auto it = m_Orders.find(orderID);
+  auto &iter = it->second.iter;
+  auto &orderList = *(it->second.list_ptr);
+
+  Price price = iter->GetPrice();
+  Side side = iter->GetSide();
+
+  orderList.erase(iter);
+  m_Orders.erase(it);
+
+  if (!orderList.empty())
+    return;
+
+  if (side == Side::Buy)
+    m_Bids.erase(price);
+  else
+    m_Asks.erase(price);
+}
+
+void OrderBook::MatchIncomingOrders(Order &order) {
+  auto trades = m_MatchingEngine->Match(order, *this);
+  for (const auto &trade : trades)
+    m_Trades.emplace_back(std::move(trade));
+}
+
 } // namespace ob::engine

@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-namespace ob::engine {
+namespace ob {
 class Trade {
 public:
   Trade() = delete;
@@ -39,4 +39,4 @@ private:
   Quantity m_Quantity;
   MatchType m_MatchType;
 };
-} // namespace ob::engine
+} // namespace ob

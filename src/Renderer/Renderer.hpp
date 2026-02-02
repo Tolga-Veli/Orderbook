@@ -3,7 +3,7 @@
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
 
-#include "OrderbookSnapshot.hpp"
+#include "OrderBookSnapshot.hpp"
 
 namespace ob::render {
 class Renderer {
@@ -11,10 +11,7 @@ public:
   Renderer();
   ~Renderer();
 
-  void Init();
-  void Shutdown();
-
-  void Render(const ob::engine::OrderbookSnapshot &snapshot);
+  void Render(const ob::engine::OrderBookSnapshot &snapshot);
 
 private:
   ftxui::ScreenInteractive m_Screen;

@@ -5,80 +5,71 @@
 #include <memory_resource>
 #include <optional>
 #include <unordered_map>
+#include <variant>
 
-#include "MatchingEngine.hpp"
-#include "OrderbookSnapshot.hpp"
+#include "Commands.hpp"
+#include "MatchingStrategy.hpp"
+#include "OrderBookSnapshot.hpp"
 
 namespace ob::engine {
 static constexpr std::size_t MEMORY_BUFFER_SIZE = 64 * (1 << 20); // 64 MiB
-class Orderbook {
+class OrderBook {
 public:
-  Orderbook()
+  explicit OrderBook(std::unique_ptr<IMatchingStrategy> strategy =
+                         std::make_unique<FIFO_Matching>())
       : m_Bids(&m_Resource), m_Asks(&m_Resource), m_Orders(&m_Resource),
-        m_MatchingEngine(std::make_unique<FIFO_Matching>()) {}
-  ~Orderbook() {}
+        m_MatchingEngine(std::move(strategy)) {}
+  ~OrderBook() {}
 
-  Orderbook(const Orderbook &) = delete;
-  void operator=(const Orderbook &) = delete;
+  OrderBook(const OrderBook &) = delete;
+  OrderBook &operator=(const OrderBook &) = delete;
 
-  Orderbook(Orderbook &&) = delete;
-  void operator=(Orderbook &&) = delete;
+  OrderBook(OrderBook &&) = delete;
+  OrderBook &operator=(OrderBook &&) = delete;
 
-  [[nodiscard]] OrderID AddOrder(ClientID clientID, Price price,
-                                 Quantity quantity, Side side,
-                                 OrderType _order_type, TimeInForce tif,
-                                 Flags flag);
-
-  void ModifyOrder(OrderID orderID, Price new_price, Quantity new_quantity);
-  void CancelOrder(OrderID id);
-  void CancelAllOrders();
-  void RemoveFillAndKill();
-
-  void SetMatchingStrategy(std::unique_ptr<IMatchingEngine> &engine) {
-    m_MatchingEngine = std::move(engine);
+  void Apply(const Command &cmd) {
+    std::visit([this](auto &&c) { Handle(c); }, cmd);
   }
 
-  [[nodiscard]] bool HasOrders() const noexcept;
-  [[nodiscard]] std::optional<Order> GetOrder(OrderID orderID) const;
-  [[nodiscard]] Order *GetBestBid();
-  [[nodiscard]] Order *GetBestAsk();
-  Quantity GetVolumeAtPrice(Price price) const;
-  std::vector<Order> GetOrderByPrice(Price price) const;
-  Price GetSpread() const;
-  void GetDepth();
+  void Shutdown() noexcept { m_Running = false; };
 
-  [[nodiscard]] OrderbookSnapshot GetSnapshot(uint32_t depth) const;
+  bool HasOrders() const noexcept;
+  std::optional<Order> GetOrder(OrderID orderID) const;
 
-  void PrintOrderbook();
-  [[nodiscard]] const std::vector<Trade> &GetTradeHistory() const {
-    return m_Trades;
-  };
+  Order *GetBestBid();
+  Order *GetBestAsk();
+  Quantity GetBidVolumeAtPrice(Price price) const;
+  Quantity GetAskVolumeAtPrice(Price price) const;
+
+  OrderBookSnapshot GetSnapshot(uint32_t depth) const;
+
+  const std::vector<Trade> &GetTradeHistory() const { return m_Trades; };
+
+  std::size_t GetBidsDepth() const { return m_Bids.size(); }
+  std::size_t GetAsksDepth() const { return m_Asks.size(); }
+
+  void PrintOrderBook() const;
 
 private:
-  /* struct OrderPointer {
-     data::List<Order>::iterator iter;
-     data::List<Order> *list_ptr;
-   };
-
-   std::shared_ptr<Allocator> m_Pool{nullptr};
-   std::map<Price, data::List<Order>, std::greater<Price>> m_Bids;
-   std::map<Price, data::List<Order>, std::less<Price>> m_Asks;*/
-
   struct OrderPointer {
     std::pmr::list<Order>::iterator iter;
     std::pmr::list<Order> *list_ptr;
   };
 
+  bool m_Running = true;
   std::pmr::monotonic_buffer_resource m_Resource{MEMORY_BUFFER_SIZE};
   std::pmr::map<Price, std::pmr::list<Order>, std::greater<Price>> m_Bids;
   std::pmr::map<Price, std::pmr::list<Order>, std::less<Price>> m_Asks;
   std::pmr::unordered_map<OrderID, OrderPointer> m_Orders;
-
-  std::unique_ptr<IMatchingEngine> m_MatchingEngine;
+  std::unique_ptr<IMatchingStrategy> m_MatchingEngine;
   std::vector<Trade> m_Trades;
 
+  // Handle the types of commands from the command queue
+  void Handle(const std::monostate &empty) {}
+  void Handle(const cmd::AddOrder &add);
+  void Handle(const cmd::ModifyOrder &modify);
+  void Handle(const cmd::CancelOrder &cancel);
+
   void MatchIncomingOrders(Order &order);
-  void AddOrderInternal(Order &&order);
-  void Shutdown() noexcept;
 };
 } // namespace ob::engine

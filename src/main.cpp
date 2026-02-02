@@ -1,8 +1,6 @@
 #include "Application.hpp"
 
 int main() {
-  auto app = new ob::Application();
+  std::unique_ptr<ob::Application> app = std::make_unique<ob::Application>();
   app->Run();
-  app->Shutdown();
-  delete app;
 }

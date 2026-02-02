@@ -9,18 +9,17 @@
 #include <string_view>
 
 namespace ob {
-using OrderID = uint64_t;
 using ClientID = uint64_t;
+using OrderID = uint64_t;
+using ClientOrderID = uint64_t;
 using TradeID = uint64_t;
-using Price = int64_t; // in cents therefore  $1 = 100
+using Price = int64_t; // in 1/10th of a cent therefore  1000 = 1$
 using Quantity = uint64_t;
 using Time = std::chrono::nanoseconds;
 
 enum class Side { Buy = 0, Sell };
 
 enum class OrderType { Limit = 0, Market, Stop, StopLimit };
-
-enum class OrderState { New = 0, PartiallyFilled, Filled, Cancelled, Rejected };
 
 enum class TimeInForce {
   DayOrder = 0,
@@ -42,6 +41,14 @@ enum class Flags : uint8_t {
   Hidden = 1,
   Iceberg = 1 << 1,
   PostOnly = 1 << 2
+};
+
+enum class OrderState {
+  Active = 0,
+  PartiallyFilled,
+  Filled,
+  Cancelled,
+  Rejected
 };
 
 inline Flags operator|(Flags a, Flags b) {
@@ -88,9 +95,8 @@ inline constexpr std::string_view to_string(OrderType order_type) {
     return "Stop";
   case OrderType::StopLimit:
     return "StopLimit";
-  default:
-    assert(false && "Missed an order type.");
   }
+  return "";
 }
 
 inline constexpr std::string_view to_string(TimeInForce tif) {
@@ -103,9 +109,10 @@ inline constexpr std::string_view to_string(TimeInForce tif) {
     return "ImmediateOrCancel";
   case TimeInForce::FillOrKill:
     return "FillOrKill";
-  default:
-    assert(false && "Missed a time in force.");
+  case TimeInForce::FillAndKill:
+    return "FillAndKill";
   }
+  return "";
 }
 
 inline std::string to_string(Flags flag) {
@@ -126,6 +133,22 @@ inline std::string to_string(Flags flag) {
   return str;
 }
 
+inline std::string_view to_string(OrderState order_state) {
+  switch (order_state) {
+  case OrderState::Active:
+    return "Active";
+  case OrderState::PartiallyFilled:
+    return "PartiallyFilled";
+  case OrderState::Filled:
+    return "Filled";
+  case OrderState::Cancelled:
+    return "Cancelled";
+  case OrderState::Rejected:
+    return "Rejected";
+  }
+  return "";
+}
+
 inline constexpr std::string_view to_string(MatchType matchType) {
   switch (matchType) {
   case MatchType::Standard:
@@ -136,9 +159,8 @@ inline constexpr std::string_view to_string(MatchType matchType) {
     return "HiddenLiquidity";
   case MatchType::Auction:
     return "Auction";
-  default:
-    assert(false && "Match Type doesn't exist.");
   }
+  return "";
 }
 
 inline static Time GetCurrentTime() {

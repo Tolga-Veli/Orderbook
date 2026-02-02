@@ -4,16 +4,17 @@
 #include <iostream>
 
 namespace ob {
-namespace engine {
 class Order {
 public:
   Order() = delete;
   Order(OrderID orderID, ClientID clientID, Price price, Quantity quantity,
-        Side side, OrderType order_type, TimeInForce tif, Flags flag) noexcept
+        Side side, OrderType order_type, TimeInForce tif, Flags flag,
+        OrderState order_state = OrderState::Active) noexcept
       : m_OrderID(orderID), m_ClientID(clientID),
         m_Timestamp(core::GetCurrentTime()), m_Price(price),
         m_IntialQuantity(quantity), m_RemainingQuantity(quantity), m_Side(side),
-        m_OrderType(order_type), m_TimeInForce(tif), m_Flags(flag) {}
+        m_OrderType(order_type), m_TimeInForce(tif), m_Flags(flag),
+        m_OrderState(order_state) {}
   ~Order() noexcept = default;
 
   const OrderID &GetOrderID() const noexcept { return m_OrderID; }
@@ -62,7 +63,8 @@ public:
               << " , Side: " << core::to_string(m_Side)
               << " , Order Type: " << core::to_string(m_OrderType)
               << " , Time in Force: " << core::to_string(m_TimeInForce)
-              << " , Flags: " << core::to_string(m_Flags) << '\n';
+              << " , Flags: " << core::to_string(m_Flags)
+              << " , OrderState: " << core::to_string(m_OrderState) << '\n';
   }
 
 private:
@@ -75,6 +77,6 @@ private:
   OrderType m_OrderType;
   TimeInForce m_TimeInForce;
   Flags m_Flags;
+  OrderState m_OrderState;
 };
-} // namespace engine
 } // namespace ob

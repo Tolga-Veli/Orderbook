@@ -5,19 +5,13 @@
 
 namespace ob::render {
 
-Renderer::Renderer() : m_Screen(ftxui::ScreenInteractive::TerminalOutput()) {
-  Init();
-}
+Renderer::Renderer() : m_Screen(ftxui::ScreenInteractive::TerminalOutput()) {}
 
-Renderer::~Renderer() { Shutdown(); }
+Renderer::~Renderer() {}
 
-void Renderer::Init() {}
-void Renderer::Shutdown() {}
-
-void Renderer::Render(const ob::engine::OrderbookSnapshot &snapshot) {
+void Renderer::Render(const ob::engine::OrderBookSnapshot &snapshot) {
   using namespace ftxui;
-
-  Quantity max_vol = 1;
+  Quantity max_vol = 0;
   for (const auto &p : snapshot.bids)
     max_vol = std::max(max_vol, p.second);
   for (const auto &p : snapshot.asks)
@@ -50,11 +44,7 @@ void Renderer::Render(const ob::engine::OrderbookSnapshot &snapshot) {
   Price best_bid = snapshot.bids.empty() ? 0 : snapshot.bids.front().first;
   Price best_ask = snapshot.asks.empty() ? 0 : snapshot.asks.front().first;
 
-  Price spread_val = 0;
-  if (best_ask > 0 && best_bid > 0)
-    spread_val = best_ask - best_bid;
-  else
-    spread_val = 0;
+  Price spread_val = best_ask - best_bid;
 
   auto spread_display =
       text(" Spread: " + core::format_price(spread_val) + " ") |
@@ -78,7 +68,6 @@ void Renderer::Render(const ob::engine::OrderbookSnapshot &snapshot) {
 
   std::cout << "\x1b[H\x1b[J";
   screen.Print();
-  std::cout << std::flush;
 }
 
 } // namespace ob::render

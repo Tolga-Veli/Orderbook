@@ -4,9 +4,9 @@
 #include <utility>
 
 namespace ob::Memory {
-// Write a memory pool like this one:
+// TODO: Write a memory pool like this one:
 // https://8dcc.github.io/programming/pool-allocator.html I have implemented in
-// C and it works; TODO: implement in C++
+// C and it works; now i have to do it in C++
 
 template <class T> class Pool {};
 } // namespace ob::Memory

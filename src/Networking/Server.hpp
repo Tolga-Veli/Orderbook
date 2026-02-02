@@ -1,19 +1,19 @@
 #pragma once
 
+#include "CommandQueue.hpp"
 #include "Networking.hpp"
-#include "Orderbook.hpp"
 
 namespace ob::networking {
 class Server {
 public:
-  Server() = default;
+  Server() : m_Orderbook(), m_Queue(m_Orderbook) {}
 
   void Close();
   Response handle(const Request &request);
 
 private:
-  // Orderbook lives during the lifetime of the server
-  engine::Orderbook m_Orderbook;
+  engine::OrderBook m_Orderbook;
+  engine::CommandQueue m_Queue;
 };
 }; // namespace ob::networking
 //

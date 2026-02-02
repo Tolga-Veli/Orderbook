@@ -4,13 +4,11 @@
 #include "Application.hpp"
 
 namespace ob {
-Application::Application() { Init(); };
-Application::~Application() { Shutdown(); }
-
-void Application::Init() {
+Application::Application()
+    : m_Orderbook(), m_Renderer(), m_CommandQueue(m_Orderbook) {
   m_Running = true;
-  m_Renderer.Init();
-}
+};
+Application::~Application() { m_Running = false; }
 
 void Application::Run() {
   static std::mt19937 rng{1};
@@ -19,16 +17,20 @@ void Application::Run() {
   std::vector<OrderID> ids;
   while (m_Running) {
     Tick();
-    int id1 = m_Orderbook.AddOrder(
-        ClientID{1}, Price{dist(rng)}, Quantity{dist(rng)}, ob::Side::Buy,
-        ob::OrderType::Limit, ob::TimeInForce::GoodTillCancelled,
-        ob::Flags::None);
-    int id2 = m_Orderbook.AddOrder(
-        ClientID{2}, Price{dist(rng)}, Quantity{dist(rng)}, ob::Side::Sell,
-        ob::OrderType::Limit, ob::TimeInForce::GoodTillCancelled,
-        ob::Flags::None);
-    ids.push_back(id1);
-    ids.push_back(id2);
+    m_CommandQueue.AddOrder(ClientID{1}, Price{dist(rng)}, Quantity{dist(rng)},
+                            ob::Side::Buy, ob::OrderType::Limit,
+                            ob::TimeInForce::GoodTillCancelled,
+                            ob::Flags::None);
+    m_CommandQueue.AddOrder(ClientID{2}, Price{dist(rng)}, Quantity{dist(rng)},
+                            ob::Side::Sell, ob::OrderType::Limit,
+                            ob::TimeInForce::GoodTillCancelled,
+                            ob::Flags::None);
+
+    std::optional<std::size_t> id1 = 0, id2 = 0;
+    if (id1.has_value())
+      ids.push_back(id1.value());
+    if (id2.has_value())
+      ids.push_back(id2.value());
 
     if (ids.size() % 50 == 0) {
       std::vector<OrderID> cancel;
@@ -42,20 +44,15 @@ void Application::Run() {
       }
 
       for (auto order_id : cancel)
-        m_Orderbook.CancelOrder(order_id);
+        m_CommandQueue.CancelOrder(order_id);
     }
     std::this_thread::sleep_for(m_FrameTime);
     // m_Renderer.Clear();
   }
 }
 
-void Application::Shutdown() {
-  m_Running = false;
-  m_Renderer.Shutdown();
-}
-
 void Application::Tick() {
-  auto snapshot = m_Orderbook.GetSnapshot(10);
+  auto snapshot = m_Orderbook.GetSnapshot(30);
   m_Renderer.Render(snapshot);
 }
 } // namespace ob

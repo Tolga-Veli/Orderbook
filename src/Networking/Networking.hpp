@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Commands.hpp"
 #include "globals.hpp"
 
 #include <variant>
@@ -7,47 +8,18 @@
 namespace ob::networking {
 using RequestID = std::uint64_t;
 
-enum class RequestType : std::uint8_t {
-  ADD = 1,
-  MODIFY,
-  CANCEL,
-};
-
-struct AddOrder {
-  ClientID clientID;
-  Price price;
-  Quantity quantity;
-  Side side;
-  OrderType order_type;
-  TimeInForce tif;
-  Flags flags;
-};
-
-struct ModifyOrder {
-  OrderID orderID;
-  Price new_price;
-  Quantity new_quantity;
-};
-
-struct CancelOrder {
-  OrderID orderID;
-};
-
 struct Request {
   RequestID requestID;
-  RequestType request_type;
-  std::variant<AddOrder, ModifyOrder, CancelOrder> payload;
+  engine::Command payload;
 };
 
 enum class ErrorCode : std::uint8_t {
-  InvalidRequest,
-  UnknownOrder,
-  PermissionDenied,
-  EngineRejected,
+  None = 0,
+  InvalidRequest = 1,
 };
 
 struct Ok {
-  std::optional<OrderID> orderID;
+  OrderID orderID;
 };
 
 struct Error {
