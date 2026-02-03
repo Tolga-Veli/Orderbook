@@ -1,22 +1,18 @@
 # Hermes-Orderbook
-
 A fast, single-threaded(for now) **C++ limit orderbook** implementing **price–time priority matching**, with a simple terminal-based visualization and order flow simulation with random orders.
 ![Live orderbook simulation](assets/orderbook.gif)
 
 
 ## Overview
-
 Hermes-Orderbook is focused on the **core mechanics of a limit orderbook**.  
 The project explores **data structure design, algorithmic complexity, and performance trade-offs** in order matching, without external dependencies.
 
 ## Features
-
 - Price–time priority order matching
 - Live terminal visualization of the orderbook
 
 
 ## Matching Rules & Guarantees
-
 The orderbook enforces the following guarantees:
 
 - **Price priority:** better prices are matched first
@@ -26,7 +22,6 @@ The orderbook enforces the following guarantees:
 
 
 ## Data Structures & Complexity
-
 The implementation is performance oriented.
 
 - Each price is a key in a Red-Black tree from the STL that holds a linked list (`std::pmr::map<Price, std::pmr::list<Order>>`)
@@ -40,7 +35,6 @@ The implementation is performance oriented.
 
 
 ## Architecture Overview
-
 High-level components:
 
 - `Order` — represents individual orders
@@ -50,11 +44,23 @@ High-level components:
 - `MatchingEngine` — executes matching logic
 - `Renderer` — terminal UI for visualization
 
+## Prerequisites
+- **C++ Compiler** with C++23 support:
+- **CMake** 3.20 or higher
+- **Git** (for cloning and submodules)
 
 ## How to build the project
+This project uses **Git Submodules** and **CMake**. To clone the repository:
+```bash
+git clone --recursive https://github.com/Tolga-Veli/Hermes-Orderbook.git
+```
 
-This project uses **CMake**. To build it, run the following commands from the project root:
+If you have already cloned the repo without `--recursive`, initialize the submodules with this command:
+```bash
+git submodule update --init --recursive
+```
 
+And to build it via the command line, run the following commands from the project root:
 ```bash
 mkdir build
 cd build
