@@ -19,11 +19,11 @@ void Application::Run() {
   std::vector<OrderID> ids;
   while (m_Running) {
     Tick();
-    int id1 = m_Orderbook.AddOrder(
+    auto id1 = m_Orderbook.AddOrder(
         ClientID{1}, Price{dist(rng)}, Quantity{dist(rng)}, ob::Side::Buy,
         ob::OrderType::Limit, ob::TimeInForce::GoodTillCancelled,
         ob::Flags::None);
-    int id2 = m_Orderbook.AddOrder(
+    auto id2 = m_Orderbook.AddOrder(
         ClientID{2}, Price{dist(rng)}, Quantity{dist(rng)}, ob::Side::Sell,
         ob::OrderType::Limit, ob::TimeInForce::GoodTillCancelled,
         ob::Flags::None);

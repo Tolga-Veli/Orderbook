@@ -1,7 +1,7 @@
 #include <algorithm> // for std::max
 
 #include "Renderer.hpp"
-#include "globals.hpp"
+#include "Core/globals.hpp"
 
 namespace ob::render {
 

@@ -1,9 +1,9 @@
 #pragma once
 
 #include <map>
-#include "globals.hpp"
-#include "Order.hpp"
-#include "Trade.hpp"
+#include "Core/globals.hpp"
+#include "Core/Order.hpp"
+#include "Core/Trade.hpp"
 
 namespace ob {
 namespace engine {

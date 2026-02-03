@@ -2,48 +2,29 @@ cmake_minimum_required(VERSION 3.20)
 
 project(Orderbook VERSION 1.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# neovim / clangd
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-set(ROOT    "${CMAKE_CURRENT_SOURCE_DIR}")
-set(SRC_DIR "${ROOT}/src")
-set(LIB_DIR "${ROOT}/libs")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/libs/FTXUI")
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
-  "${SRC_DIR}/*.inl"
-  "${SRC_DIR}/*.cpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*.inl"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
 
 file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS
-  "${SRC_DIR}/*.hpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp"
 )
-
-file(GLOB_RECURSE SRC_SUBDIRS LIST_DIRECTORIES true
-  "${SRC_DIR}/*"
-)
-
-set(ALL_INCLUDE_DIRS
-  "${SRC_DIR}"
-  "${LIB_DIR}"
-)
-
-foreach(p ${SRC_SUBDIRS})
-  if(IS_DIRECTORY "${p}")
-    list(APPEND ALL_INCLUDE_DIRS "${p}")
-  endif()
-endforeach()
-
-list(REMOVE_DUPLICATES ALL_INCLUDE_DIRS)
-
-add_subdirectory("${LIB_DIR}/ftxui")
 
 add_executable(Orderbook ${SOURCES} ${HEADERS})
+# Visual Studio compatibility
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Orderbook)
+target_compile_features(Orderbook PRIVATE cxx_std_23)
 
 target_include_directories(Orderbook PRIVATE
-  ${ALL_INCLUDE_DIRS}
+    "${CMAKE_CURRENT_SOURCE_DIR}/src"
+    "${CMAKE_CURRENT_SOURCE_DIR}/libs"
+)
+
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" PREFIX "src" FILES
+  ${SOURCES} ${HEADERS}
 )
 
 target_link_libraries(Orderbook PRIVATE
@@ -52,16 +33,10 @@ target_link_libraries(Orderbook PRIVATE
   ftxui::component
 )
 
-source_group(TREE "${SRC_DIR}" PREFIX "src" FILES
-  ${SOURCES} ${HEADERS}
+target_compile_options(Orderbook PRIVATE
+  $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:MSVC>>:/Zi /Od /permissive- /W4>
+  $<$<AND:$<CONFIG:Debug>,$<NOT:$<CXX_COMPILER_ID:MSVC>>>:-g3 -O0 -fno-omit-frame-pointer>
 )
-
-# sanitizers
-set(CMAKE_BUILD_TYPE Debug)
-add_compile_options(-g3 -O0 -fno-omit-frame-pointer)
-add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer -g3 -O1)
-add_link_options(-fsanitize=address,undefined)
-
 
 #enable_testing()
 #file(GLOB_RECURSE TEST_SOURCE CONFIGURE_DEPENDS

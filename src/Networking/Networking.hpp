@@ -1,8 +1,8 @@
 #pragma once
 
-#include "globals.hpp"
-
 #include <variant>
+
+#include "Core/globals.hpp"
 
 namespace ob::networking {
 using RequestID = std::uint64_t;

@@ -7,7 +7,7 @@
 #include <unordered_map>
 
 #include "MatchingEngine.hpp"
-#include "OrderbookSnapshot.hpp"
+#include "Core/OrderbookSnapshot.hpp"
 
 namespace ob::engine {
 static constexpr std::size_t MEMORY_BUFFER_SIZE = 64 * (1 << 20); // 64 MiB
