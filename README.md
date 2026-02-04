@@ -4,8 +4,8 @@ A fast, single-threaded(for now) **C++ limit orderbook** implementing **price–
 
 
 ## Overview
-Hermes-Orderbook is focused on the **core mechanics of a limit orderbook**.  
-The project explores **data structure design, algorithmic complexity, and performance trade-offs** in order matching, without external dependencies.
+Hermes-Orderbook implements the **core mechanics of a limit orderbook**.  
+The project dives into **data structure design, algorithmic complexity, and performance trade-offs** without any external dependencies.
 
 ## Features
 - Price–time priority order matching
@@ -30,7 +30,7 @@ The implementation is performance oriented.
 
 **Asymptotic behavior:**
 - Order insertion: *O(log n)*
-- Order cancellation: *amortized O(1)*
+- Order cancellation: *O(1)*
 - Best price query: *O(1)*
 
 
